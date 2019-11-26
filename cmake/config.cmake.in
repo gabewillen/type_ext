@@ -1,0 +1,16 @@
+@PACKAGE_INIT@
+get_filename_component(@PROJECT_NAME@_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(@PROJECT_NAME@_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${@PROJECT_NAME@_CMAKE_DIR})
+
+# NOTE Had to use find_package because find_dependency does not support COMPONENTS or MODULE until 3.8.0
+
+
+if(NOT TARGET @PROJECT_NAME@::@PROJECT_NAME@)
+    include("${@PROJECT_NAME@_CMAKE_DIR}/@PROJECT_NAME@Targets.cmake")
+endif()
+
+set(@PROJECT_NAME@_LIBRARIES @PROJECT_NAME@::@PROJECT_NAME@)
