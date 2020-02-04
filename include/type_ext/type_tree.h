@@ -6,7 +6,7 @@
 #ifndef TYPE_EXT_TYPE_TREE_H
 #define TYPE_EXT_TYPE_TREE_H
 
-#include "tuple_algorithm.h"
+#include "type_algorithm.h"
 
 namespace ext {
 
@@ -30,8 +30,8 @@ namespace ext {
                 using type = ext::type_node<CHILD, type_node<TYPE, PARENT...>>;
             };
 
-            using type = typename tuple_transform<tuple_begin<typename TYPE::children>,
-                                                  tuple_end<typename TYPE::children>, to_tree>::type;
+            using type = typename type_transform<type_begin<typename TYPE::children>,
+                                                  type_end<typename TYPE::children>, to_tree>::type;
         };
 
     } // namespace detail
@@ -58,7 +58,7 @@ namespace ext {
 
     template<class TREE>
     struct type_tree_preorder {
-        using type = tuple_flatten_t<TREE, typename type_tree_preorder<typename TREE::children>::type>;
+        using type = type_flatten_t<TREE, typename type_tree_preorder<typename TREE::children>::type>;
     };
 
 
@@ -69,7 +69,7 @@ namespace ext {
 
     template<class NODE, class ...CHILDREN>
         struct type_tree_preorder<std::tuple<NODE, CHILDREN...>> {
-            using type = tuple_flatten_t<typename type_tree_preorder<NODE>::type, typename type_tree_preorder<std::tuple<CHILDREN...>>::type>;
+            using type = type_flatten_t<typename type_tree_preorder<NODE>::type, typename type_tree_preorder<std::tuple<CHILDREN...>>::type>;
         };
 
 
@@ -83,10 +83,10 @@ namespace ext {
     };
 
     template<class NODE, class ...CHILDREN>
-        struct type_tree_postorder<std::tuple<NODE, CHILDREN...>> : tuple_flatten<typename type_tree_postorder<NODE>::type, typename type_tree_postorder<std::tuple<CHILDREN...>>::type> {};
+        struct type_tree_postorder<std::tuple<NODE, CHILDREN...>> : type_flatten<typename type_tree_postorder<NODE>::type, typename type_tree_postorder<std::tuple<CHILDREN...>>::type> {};
 
     template<class TREE>
-    struct type_tree_postorder<TREE> : tuple_flatten<typename type_tree_postorder<typename TREE::children>::type, TREE> {};
+    struct type_tree_postorder<TREE> : type_flatten<typename type_tree_postorder<typename TREE::children>::type, TREE> {};
 
 } // namespace ext
 
